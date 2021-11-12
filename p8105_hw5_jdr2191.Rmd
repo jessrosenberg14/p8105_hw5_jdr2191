@@ -12,15 +12,21 @@ library(viridis)
 ```{r}
 washington_post = "https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"
 
-homicide_data = read_csv(washington_post)
+homicide_data = 
+  read_csv(washington_post) %>%
+  janitor::clean_names()
 ```
+
+The homicide dataset contains `r count(homicide_data)` observations.
 
 
 ## Problem 2
 
 ```{r}
 allfiles_df = 
-list.files(path = "data", pattern = "*.csv")
+  list.files(path = "data", pattern = "*.csv")
+
+
 
 view(allfiles_df)
 ```

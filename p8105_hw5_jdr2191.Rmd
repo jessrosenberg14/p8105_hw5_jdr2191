@@ -6,3 +6,10 @@ output: github_document
 library(tidyverse)
 library(viridis)
 ```
+
+## Problem 2
+
+```{r}
+list.files(path = "data", pattern = "*.csv")
+```
+

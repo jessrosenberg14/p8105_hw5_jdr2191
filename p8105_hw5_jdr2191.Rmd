@@ -10,14 +10,36 @@ library(viridis)
 ## Problem 1
 
 ```{r}
-washington_post = "https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"
+homicide_df = 
+  read_csv("./data/homicide-data.csv", na == c("", "Unknown")) %>%
+  mutate(city_state = str_c(city, state),
+         resolution = case_when(
+           disposition == "Closed without arrest" ~ "unsolved",
+           disposition == "Open/No arrest" ~ "unsolved",
+           disposition == "Closed by arrest" ~ "solved"
+         )) %>%
+  relocate(city_state) %>%
+  filter(city_state != "TulsaAL")
 
-homicide_data = 
-  read_csv(washington_post) %>%
-  janitor::clean_names()
+homicide_df %>%
+  count(city_state) %>% view
+
 ```
 
+victim_age: encoded as a character (will want to address)
+some other things are listed as NA
+
 The homicide dataset contains `r count(homicide_data)` observations.
+
+```{r}
+homicides = 
+homicide_data %>% 
+  mutate(city_state = str_c(city, ", " , state)) %>%
+  group_by(city_state, disposition) %>%
+  summarise(number_homicides = n_distinct(uid))
+
+unique(pull(homicides, disposition))
+```
 
 
 ## Problem 2

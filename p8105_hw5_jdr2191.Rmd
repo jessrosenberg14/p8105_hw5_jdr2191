@@ -11,7 +11,7 @@ library(viridis)
 
 ```{r}
 homicide_df = 
-  read_csv("./data/homicide-data.csv", na == c("", "Unknown")) %>%
+  read_csv("./homicides/homicide-data.csv", na = c("", "Unknown")) %>%
   mutate(city_state = str_c(city, state),
          resolution = case_when(
            disposition == "Closed without arrest" ~ "unsolved",
@@ -32,15 +32,26 @@ some other things are listed as NA
 The homicide dataset contains `r count(homicide_data)` observations.
 
 ```{r}
-homicides = 
-homicide_data %>% 
-  mutate(city_state = str_c(city, ", " , state)) %>%
-  group_by(city_state, disposition) %>%
-  summarise(number_homicides = n_distinct(uid))
+baltimore_df = 
+  homicide_df %>%
+  filter(city_state == "BaltimoreMD")
 
-unique(pull(homicides, disposition))
+baltimore_summary = 
+  baltimore_df %>%
+  summarize(
+    unsolved = sum(resolution == "unsolved"),
+    n = n()
+  )
+
+baltimore_test = 
+  prop.test(
+    x = baltimore_summary %>% pull(unsolved),
+    n = baltimore_summary %>% pull(n))
+
+baltimore_test %>%
+  broom::tidy()
 ```
-
+64% were not solved; 95% CI of .627 to .663
 
 ## Problem 2
 

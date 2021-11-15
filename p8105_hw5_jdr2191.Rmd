@@ -31,6 +31,7 @@ some other things are listed as NA
 
 The homicide dataset contains `r count(homicide_data)` observations.
 
+Let's look at Baltimore, MD
 ```{r}
 baltimore_df = 
   homicide_df %>%
@@ -52,6 +53,30 @@ baltimore_test %>%
   broom::tidy()
 ```
 64% were not solved; 95% CI of .627 to .663
+
+Let's try to iterate across cities. 
+
+First off, write a function
+```{r}
+prop_test_function = function(city_df) {
+  
+  city_summary = 
+  city_df %>%
+  summarize(
+    unsolved = sum(resolution == "unsolved"),
+    n = n()
+  )
+
+city_test = 
+  prop.test(
+    x = city_summary %>% pull(unsolved),
+    n = city_summary %>% pull(n))
+  
+return(city_test)
+  
+}
+```
+
 
 ## Problem 2
 

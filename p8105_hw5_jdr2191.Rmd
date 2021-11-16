@@ -125,13 +125,21 @@ homicide_df %>%
 ```{r}
 files_df =
   tibble(
-    participants = list.files("data")) 
+    participant_id = list.files("data")) 
 
 files2_df =
   files_df %>%
-  mutate(file_contents = map(participants, function(x) read_csv(file.path("data", x)))) %>%
-  mutate(participants = gsub(".csv", "", participants))
-  
+  mutate(file_contents = map(participant_id , function(x) read_csv(file.path("data", x)))) %>%
+  mutate(participant_id = gsub(".csv", "", participant_id)) %>%
+  unnest(file_contents) %>%
+  pivot_longer(
+    cols = starts_with("week"),
+    names_to = "week",
+    names_prefix = "week_",
+    values_to = "value",
+  ) %>%
+  separate(participant_id, c("controL_arm", "study_id"), sep = "_")
+
 ```
 
 ## Problem 3

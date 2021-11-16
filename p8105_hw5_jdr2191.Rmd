@@ -140,8 +140,24 @@ files2_df =
   ) %>%
   separate(participant_id, c("control_arm", "study_id"), sep = "_") %>%
   mutate(control_arm = ifelse(control_arm == "con","control","experimental"))
+```
+
+Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
+
+```{r}
+files2_df %>%
+  ggplot(aes(x = week, y = value)) +
+  geom_line(aes(group = study_id, color = control_arm), size = 1) +
+  facet_grid(cols = vars(control_arm), switch = "y") + 
+  scale_colour_viridis_d(option = "E") + 
+  labs(x = "Week", y = "Value", col = "Control Arm") +
+  theme_minimal()
+
+
+geom_line(aes(group = locationabbr, color = locationabbr), size = .9, alpha = .5) +
 
 ```
+
 
 ## Problem 3
 

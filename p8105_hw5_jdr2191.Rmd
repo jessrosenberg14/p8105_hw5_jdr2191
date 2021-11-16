@@ -125,13 +125,19 @@ homicide_df %>%
 ```{r}
 files_df =
   tibble(
-    participants = list.files("data")) %>%
-    mutate()
+    participants = list.files("data")) 
+
+
+%>%
+    mutate(participants = gsub(".csv", "", participants))
 
 files2_df =
   files_df %>%
+  mutate(file_contents = map(participants, function(x) read_csv(file.path("data", x))))
+  
   map(function(x) read_csv(file.path("data", x))) %>%
-  reduce(rbind)
+  map(files_df, read_csv) %>%
+  reduce(rbind) 
 
 files2_df =
   files_df %>%

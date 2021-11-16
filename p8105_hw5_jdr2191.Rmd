@@ -127,68 +127,11 @@ files_df =
   tibble(
     participants = list.files("data")) 
 
-
-%>%
-    mutate(participants = gsub(".csv", "", participants))
-
 files2_df =
   files_df %>%
-  mutate(file_contents = map(participants, function(x) read_csv(file.path("data", x))))
+  mutate(file_contents = map(participants, function(x) read_csv(file.path("data", x)))) %>%
+  mutate(participants = gsub(".csv", "", participants))
   
-  map(function(x) read_csv(file.path("data", x))) %>%
-  map(files_df, read_csv) %>%
-  reduce(rbind) 
-
-files2_df =
-  files_df %>%
-  map(function(file_name) {
-    assign(x = str_remove(file_name, ".csv"))
-    value = read_csv(paste0("data", file_name)),
-    envir = .GlobalEnv
-  })
-
-```
-
-Testing out reading in one file:
-
-```{r}
-con_01_df = 
-  read_csv("data/con_01.csv") 
-
-con_01 = 
-  con_01_df %>%
-  write.table(con_01, file = sprintf("%s.csv",participant), row.names=FALSE)
-  
-
-baltimore_test = 
-  prop.test(
-    x = baltimore_summary %>% pull(unsolved),
-    n = baltimore_summary %>% pull(n))
-
-baltimore_test %>%
-  broom::tidy()
-```
-
-
-Write a function
-```{r}
-read_participants_function = function(participant_df) {
-
-participant_data = 
-  participant_df %>% 
-  read_csv("data")
-
-participant_test = 
-  prop.test(x = participant_data)
-
-  return(participant_test)
-}
-
-prop_test_function(baltimore_df)
-
-homicide_df %>%
-  filter(city_state == "AlbuquerqueNM") %>%
-  prop_test_function()
 ```
 
 ## Problem 3

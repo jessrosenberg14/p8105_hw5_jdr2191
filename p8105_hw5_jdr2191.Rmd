@@ -138,7 +138,8 @@ files2_df =
     names_prefix = "week_",
     values_to = "value",
   ) %>%
-  separate(participant_id, c("controL_arm", "study_id"), sep = "_")
+  separate(participant_id, c("control_arm", "study_id"), sep = "_") %>%
+  mutate(control_arm = ifelse(control_arm == "con","control","experimental"))
 
 ```
 

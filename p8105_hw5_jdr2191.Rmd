@@ -152,10 +152,6 @@ files2_df %>%
   scale_colour_viridis_d(option = "E") + 
   labs(x = "Week", y = "Value", col = "Control Arm") +
   theme_minimal()
-
-
-geom_line(aes(group = locationabbr, color = locationabbr), size = .9, alpha = .5) +
-
 ```
 
 

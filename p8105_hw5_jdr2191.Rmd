@@ -29,7 +29,7 @@ homicide_df %>%
 victim_age: encoded as a character (will want to address)
 some other things are listed as NA
 
-The homicide dataset contains `r count(homicide_data)` observations.
+The homicide dataset contains `r count(homicide_df)` observations.
 
 Let's look at Baltimore, MD
 ```{r}
@@ -147,10 +147,10 @@ Make a spaghetti plot showing observations on each subject over time, and commen
 ```{r}
 files2_df %>%
   ggplot(aes(x = week, y = value)) +
-  geom_line(aes(group = study_id, color = control_arm), size = 1) +
+  geom_line(aes(group = study_id, color = study_id), size = 1) +
   facet_grid(cols = vars(control_arm), switch = "y") + 
-  scale_colour_viridis_d(option = "E") + 
-  labs(x = "Week", y = "Value", col = "Control Arm") +
+  scale_colour_viridis_d(option = "D") + 
+  labs(x = "Week", y = "Value", col = "Patient ID") +
   theme_minimal()
 ```
 There is less variability in values over time for the control arm than for the experimental arm. In the control arm, values seem to range from abut -2.3 to 4 whereas for the experimental arm, values seem to range from about -1 to 7.6. In the experimental arm, values for individuals apepar to increase over time throughout the course of the study.  
@@ -158,35 +158,36 @@ There is less variability in values over time for the control arm than for the e
 ## Problem 3
 
 ```{r}
-library(tidyverse)
-
 set.seed(10)
 
-iris_with_missing = iris %>%
+iris_with_missing = 
+  iris %>%
   map_df(~replace(.x, sample(1:150, 20), NA)) %>%
-  mutate(Species = as.character(Species))
+  mutate(Species = as.character(Species)) %>%
+  janitor::clean_names()
 ```
 
-Write a function.
-
+Write a function
 ```{r}
-fill_in_missing = function(vector) {
+update_missing = function(x) {
   
-  if (is.numeric) {
+   if (is.numeric(x)) {
+     
+     ifelse(is.na(x) == TRUE, mean(x, na.rm = TRUE), x)
+     
+   }
+  
+   else if (is.character(x)) {
     
+    ifelse(is.na(x) == TRUE, "virginica", x)
     
   }
-  
-  if (is.character) {
-    
-    
-  }
-  
-  
-  }
-  }
-  
+
 }
 ```
 
-we will map across a DF and update each of the columns and put it back together as a DF
+Create a new dataframe without missing values
+```{r}
+iris_complete = map_df(iris_with_missing, update_missing)
+```
+

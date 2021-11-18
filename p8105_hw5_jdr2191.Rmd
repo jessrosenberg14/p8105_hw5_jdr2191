@@ -122,7 +122,8 @@ homicide_df %>%
 
 ## Problem 2
 
-```{r}
+Create a tidy dataframe containing data from all participants, including the subject ID, arm, and observations over time.
+```{r create_df, message=FALSE}
 files_df =
   tibble(
     participant_id = list.files("data")) 
@@ -138,19 +139,19 @@ files2_df =
     names_prefix = "week_",
     values_to = "value",
   ) %>%
-  separate(participant_id, c("control_arm", "study_id"), sep = "_") %>%
-  mutate(control_arm = ifelse(control_arm == "con","control","experimental"))
+  separate(participant_id, c("study_arm", "subject_id"), sep = "_") %>%
+  mutate(study_arm = ifelse(study_arm == "con","Control","Experimental"))
 ```
 
 Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
-
-```{r}
+```{r create_plot, message=FALSE}
 files2_df %>%
   ggplot(aes(x = week, y = value)) +
-  geom_line(aes(group = study_id, color = study_id), size = 1) +
-  facet_grid(cols = vars(control_arm), switch = "y") + 
+  geom_line(aes(group = subject_id, color = subject_id), size = 1) +
+  geom_point(aes(group = subject_id, color = subject_id)) +
+  facet_grid(cols = vars(study_arm), switch = "y") + 
   scale_colour_viridis_d(option = "D") + 
-  labs(x = "Week", y = "Value", col = "Patient ID") +
+  labs(x = "Week", y = "Value", col = "Subject ID") +
   theme_minimal()
 ```
 There is less variability in values over time for the control arm than for the experimental arm. In the control arm, values seem to range from abut -2.3 to 4 whereas for the experimental arm, values seem to range from about -1 to 7.6. In the experimental arm, values for individuals apepar to increase over time throughout the course of the study.  

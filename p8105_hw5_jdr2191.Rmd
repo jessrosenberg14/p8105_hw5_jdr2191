@@ -8,7 +8,7 @@ library(viridis)
 ```
 
 ## Problem 1
-```{r}
+```{r, message=FALSE}
 homicides_df = 
   read_csv("homicides/homicide-data.csv", na = c("", "Unknown")) %>% 
   mutate(
@@ -23,7 +23,7 @@ homicides_df =
 ```
 
 Let's focus on Baltimore MD 
-```{r}
+```{r, message=FALSE}
 baltimore_df = 
   homicides_df %>% 
   filter(city_state == "BaltimoreMD")
@@ -43,7 +43,7 @@ balimtore_test %>%
 ```
 
 Let's try to iterate across cities
-```{r}
+```{r, message=FALSE}
 prop_test_function = function(city_df) {
 
   city_summary = 
@@ -63,7 +63,7 @@ prop_test_function = function(city_df) {
 ```
 
 Let's iterate across all cities
-```{r}
+```{r, message=FALSE}
 results_df = 
   homicides_df %>% 
   nest(data = uid:resolution) %>% 
@@ -77,7 +77,7 @@ results_df =
 ```
 
 Try to make a plot showing estimates and confidence intervals 
-```{r}
+```{r, message=FALSE}
 results_df %>% 
   mutate(city_state = fct_reorder(city_state, estimate)) %>% 
   ggplot(aes(x = city_state, y = estimate)) +
@@ -86,7 +86,7 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
-```{r}
+```{r, message=FALSE}
 homicides_df %>% 
   group_by(city_state) %>% 
   summarize(

@@ -9,7 +9,7 @@ library(viridis)
 
 ## Problem 1
 
-```{r}
+```{r, message = FALSE}
 homicide_df = 
   read_csv("./homicides/homicide-data.csv", na = c("", "Unknown")) %>%
   mutate(city_state = str_c(city, state),
@@ -25,14 +25,10 @@ homicide_df %>%
   count(city_state) %>% view
 
 ```
-
-victim_age: encoded as a character (will want to address)
-some other things are listed as NA
-
 The homicide dataset contains `r count(homicide_df)` observations.
 
 Let's look at Baltimore, MD
-```{r}
+```{r, message = FALSE}
 baltimore_df = 
   homicide_df %>%
   filter(city_state == "BaltimoreMD")
@@ -57,7 +53,7 @@ baltimore_test %>%
 Let's try to iterate across cities. 
 
 First off, write a function
-```{r}
+```{r, message = FALSE}
 prop_test_function = function(city_df) {
 
 city_summary = 
@@ -82,20 +78,21 @@ homicide_df %>%
 ```
 
 Now let's iterate across cities
-```{r}
+```{r., message = FALSE}
 results_df = 
   homicide_df %>% 
   nest(data = uid:resolution) %>% 
-  mutate(
+    mutate(
     test_results = map(data, prop_test_function),
     tidy_results = map(test_results, broom::tidy)
   ) %>% 
   select(city_state, tidy_results) %>% 
-  unnest(tidy_results) 
+  unnest(tidy_results) %>% 
+  select(city_state, estimate, starts_with("conf"))
 ```
 
 Try to make a plot showing estimates and CIs
-```{r}
+```{r, message = FALSE}
 results_df %>% 
   mutate(city_state = fct_reorder(city_state, estimate)) %>% 
   ggplot(aes(x = city_state, y = estimate)) +
@@ -104,7 +101,7 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
-```{r}
+```{r, message = FALSE}
 homicide_df %>% 
   group_by(city_state) %>% 
   summarize(
@@ -190,8 +187,10 @@ update_missing = function(x) {
 
 }
 ```
+
 Applying this function to the columns of iris_with_missing using a map statement.
-```{r}
-iris_complete = map_df(iris_with_missing, update_missing)
+```{r replace_missing, message = FALSE}
+iris_complete = 
+  map_df(iris_with_missing, update_missing)
 ```
 

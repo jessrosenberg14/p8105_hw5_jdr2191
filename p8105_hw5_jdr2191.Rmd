@@ -158,7 +158,7 @@ There is less variability in values over time for the control arm than for the e
 
 ## Problem 3
 
-```{r}
+```{r import_data, message=FALSE}
 set.seed(10)
 
 iris_with_missing = 
@@ -168,8 +168,12 @@ iris_with_missing =
   janitor::clean_names()
 ```
 
-Write a function
-```{r}
+Writing a function that takes a vector as an argument; replaces missing values so that:
+
+* For numeric variables, you should fill in missing values with the mean of non-missing values
+
+* For character variables, you should fill in missing values with "virginica"
+```{r function, message=FALSE}
 update_missing = function(x) {
   
    if (is.numeric(x)) {
@@ -186,8 +190,7 @@ update_missing = function(x) {
 
 }
 ```
-
-Create a new dataframe without missing values
+Applying this function to the columns of iris_with_missing using a map statement.
 ```{r}
 iris_complete = map_df(iris_with_missing, update_missing)
 ```

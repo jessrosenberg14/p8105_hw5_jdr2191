@@ -136,6 +136,7 @@ files2_df %>%
   labs(x = "Week", y = "Value", col = "Subject ID") +
   theme_minimal()
 ```
+
 There is less variability in values over time for subjects in the control arm than for subjects in the experimental arm. In the control arm, values for individuals range from about -2.3 to 4 whereas for the experimental arm, values range from about -1 to 7.6. In the control arm, although values fluctuate for individuals over the 8 weeks of the study, there is no clear linear pattern in how they fluctuate from Week 1 to Week 8. On the other hand, values for individuals in the experimental arm generally increase over time throughout the course of the study in a way that is roughly linear. 
 
 ## Problem 3
